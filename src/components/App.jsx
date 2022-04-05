@@ -1,27 +1,48 @@
 import React, { useState } from "react";
+import Title from "./title";
+import Module from "./module";
+import Eventlist from "./eventlist";
 
 function App() {
-  var click = false;
-  var [name, setname] = useState();
-  function inputvalue(event) {
-    setname(event.target.value);
-  }
+  const [showevent, setshowevent] = useState(false);
+  const [showModel, setShowModel] = useState(false);
+  const [event, setevent] = useState([
+    { title: "mario's birthday bash", id: 1 },
+    { title: "bowsder live stream", id: 2 },
+    { title: "race on moo moo farm", id: 3 }
+  ]);
+  const handleClick = (id) => {
+    setevent((prevValue) => {
+      return prevValue.filter((event) => {
+        return id !== event.id;
+      });
+    });
+  };
+  const handleClose = () => {
+    setShowModel(false);
+  };
+  const handleOpen = () => {
+    setShowModel(true);
+  };
   return (
     <div className="container">
-      <h1>Hello {click && { name }}</h1>
-      <input
-        onChange={inputvalue}
-        type="text"
-        placeholder="What's your name?"
-      />
+      <Title />
       <button
         onClick={() => {
-          click = true;
-          console.log(name);
+          setshowevent(true);
         }}
       >
-        Submit
+        show events
       </button>
+      {showevent && <Eventlist event={event} handleClick={handleClick} />}
+
+      <button onClick={handleOpen}>Show Event</button>
+      {showModel && (
+        <Module handleClose={handleClose}>
+          <h2> 10% off cuopon code</h2>
+          <p> use the code NINJA10 at the checkout</p>
+        </Module>
+      )}
     </div>
   );
 }
